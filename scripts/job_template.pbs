@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# --- job_template.pbs ---
+
+# --- Direttive PBS Fisse ---
+# QUEUE
+#PBS -q short_cpuQ
+
+
+# --- Setup Ambiente ---
+module load gcc91
+module load perf
+
+export OMP_NUM_THREADS=$NCPUS
+
+# Vai alla cartella da cui abbiamo lanciato qsub
+cd "$PBS_O_WORKDIR"
+echo "Cartella di lavoro: $(pwd)"
+
+echo "Esecuzione benchmark..."
+echo "Matrice: $MATRICE"
+echo "Scheduler: $SCHEDULER"
+echo "Threads: $NCPUS"
+
+# --- Esecuzione ---
+# Stampa il tempo (stdout) sul file .out definito da qsub
+if [ "$SCHEDULER" == "sequential" ]; then
+    perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses ./Sequential.out "$MATRICE"
+else
+    perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses ./Parallel.out "$MATRICE" "$SCHEDULER"
+fi
