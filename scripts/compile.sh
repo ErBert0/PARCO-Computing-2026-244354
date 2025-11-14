@@ -1,10 +1,14 @@
 #!/bin/bash
 
-module load gcc91
 
-g++ -std=c++11 -march=native -O3 -o Sequential.out Sequential.cpp
+#Here you can modify the Compiler and the Compilation Flags
 
-g++ -std=c++11 -march=native -O3 -fopenmp -o Parallel.out Parallel.cpp
+#module load gcc91
 
-echo "Compilazione terminata. Eseguibili creati:"
-ls -lh *.out
+g++ -std=c++11 -O3 -o Sequential.out ../src/Sequential.cpp
+g++ -std=c++11 -O3 -fopenmp -o Parallel.out ../src/Parallel.cpp
+
+echo "Compilation Terminated."
+
+
+
