@@ -26,4 +26,8 @@ fi
 
 PERF_FLAGS="L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses"
 
-perf stat -e $PERF_FLAGS "$EXECUTABLE_PATH" "$MATRICE" "$SCHEDULER"
+if [ "$SCHEDULER" == "sequential" ]; then
+    perf stat -e $PERF_EVENTS "$EXECUTABLE_PATH" "$MATRICE"
+else
+    perf stat -e $PERF_EVENTS "$EXECUTABLE_PATH" "$MATRICE" "$SCHEDULER"
+fi
