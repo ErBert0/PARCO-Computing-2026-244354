@@ -1,20 +1,36 @@
 # Parallel Computing Project: SpMV Algorithm
 
-## 1. Structure
+## 1. Algorithm Overview
+
+This project focuses on the optimization of **Sparse Matrix-Vector Multiplication (SpMV)** using `OpenMP` on a `shared memory system`.
+
+### 1.1 Data Representation and Algorithm Parallelization
+
+To reduce memory overhead during the matrix-vector multiplication, the input matrix is first converted into the **Compressed Sparse Row (CSR)** format.
+
+To parallelize the operation, we use the **OpenMP** library.  Using the `#pragma omp parallel for` directive.
+
+We evaluate three different scheduling strategies:
+ - `static`
+ - `dynamic`
+ - `guided`  
+ 
+## 2. Structure
 
 - **/src**: Contains the C++ source code.
 - **/scripts**: Contains all utility scripts for running benchmarks on the cluster.
 - **/results**: Contains the final aggregated output files (`.xlsx`) with all the data collected.
 - **/plots**: Contains the final graphs and figures used in the report.
 
-## 2. Compiler Version and Environment
+## 3. Compiler Version and Environment
 
 All benchmarks were conducted on the university cluster, using:
 
 - **Compiler:** `gcc91` (GCC 9.1)
+- **Modules:** `gcc91` and `perf`
 - **Compilation Flags:** `g++-9.1.0 -O3 -fopenmp -o <output_name> <source_file>`
 
-## 3. How to Compile and Run
+## 4. How to Compile and Run
 
 ### Step 0: Clone the Repository
 ```bash
@@ -68,9 +84,18 @@ qsub -N "manual_submit" \
      scripts/job_template.pbs
 ```
 
-## 4. Input and Output
+## 5. Input and Output
 
 - **Input:** The C++ program accepts the path to a matrix in `.mtx` format. The parallel version also accepts a scheduler name (`static`, `dynamic`, or `guided`) as the second argument.
+
+Use the following commands to run the program locally on your device
+```bash
+perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses Sequential.out "Matrix Name"
+```
+
+```bash
+perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses Parallel.out "Matrix Name" "Scheduling type"
+```
 - **Output:** You will end up with two different files `.out` and `.err`
     - The `.out` file will contain the CPU time and the elapsed time of the process in ms
     - The `.err` file will contain the `perf stat` analysis 
