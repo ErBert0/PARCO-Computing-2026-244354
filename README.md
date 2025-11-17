@@ -88,6 +88,10 @@ qsub -N "manual_submit" \
 
 - **Input:** The C++ program accepts the path to a matrix in `.mtx` format. The parallel version also accepts a scheduler name (`static`, `dynamic`, or `guided`) as the second argument.
 
+- **Output:** You will end up with two different files `.out` and `.err`
+    - The `.out` file will contain the CPU time and the elapsed time of the process in ms
+    - The `.err` file will contain the `perf stat` analysis 
+
 ### 5.1 Running Locally
 
 **Sequential:**
@@ -99,8 +103,3 @@ perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses ./S
 export OMP_NUM_THREADS=8
 perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses ./Parallel.out "path/to/matrix.mtx" "dynamic"
 ```
-- **Output:** You will end up with two different files `.out` and `.err`
-    - The `.out` file will contain the CPU time and the elapsed time of the process in ms
-    - The `.err` file will contain the `perf stat` analysis 
-
-
