@@ -88,13 +88,16 @@ qsub -N "manual_submit" \
 
 - **Input:** The C++ program accepts the path to a matrix in `.mtx` format. The parallel version also accepts a scheduler name (`static`, `dynamic`, or `guided`) as the second argument.
 
-Use the following commands to run the program locally on your device
-```bash
-perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses Sequential.out "Matrix Name"
-```
+### 5.1 Running Locally
 
+**Sequential:**
 ```bash
-perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses Parallel.out "Matrix Name" "Scheduling type"
+perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses ./Sequential.out "path/to/matrix.mtx"
+```
+**Parallel: (Remembre to set the number of threads)**
+```bash
+export OMP_NUM_THREADS=8
+perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses ./Parallel.out "path/to/matrix.mtx" "dynamic"
 ```
 - **Output:** You will end up with two different files `.out` and `.err`
     - The `.out` file will contain the CPU time and the elapsed time of the process in ms
