@@ -90,7 +90,7 @@ vector<double> spmv_parallel(
     }
     else if (scheduler == "dynamic")
     {
-        #pragma omp parallel for schedule(dynamic)
+        #pragma omp parallel for schedule(dynamic,100)
         for (int i = 0; i < nrow; i++) {
 
         double local_sum = 0;
@@ -104,7 +104,7 @@ vector<double> spmv_parallel(
     }
     else if (scheduler == "guided")
     {
-        #pragma omp parallel for schedule(guided)
+        #pragma omp parallel for schedule(guided,100)
         for (int i = 0; i < nrow; i++) {
 
         double local_sum = 0;

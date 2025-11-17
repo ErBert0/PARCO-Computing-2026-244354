@@ -1,6 +1,5 @@
 # Parallel Computing Project: SpMV Algorithm
 
-
 ## 1. Structure
 
 - **/src**: Contains the C++ source code.
@@ -29,7 +28,7 @@ To compile the `Sequential.cpp` and `Parallel.cpp` source codes, you can run the
 
 ```bash
 # This script will compile both .cpp files from /src
-# Here you will be albe to change the compiler flags or the source paths.
+# Here you will be able to change the compiler flags and the source paths.
 ./scripts/compile.sh
 ``` 
 This will create `Sequential.out` and `Parallel.out` in the main directory.
