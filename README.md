@@ -57,8 +57,8 @@ You will have to manually edit **two different variables** in the `script/launch
 
 ### Step 3: Running the Benchmark
 
-To run the entire benchmark you can use the main script called `launch_all_10_times.sh`
-- **Important:** I suggest using a terminal multiplexer such as "screen". The script may take several hours to complete.
+To run the entire benchmark you can use the main script called `launch_all.sh`
+- **Important:** I suggest using a terminal multiplexer such as "screen". The script may take several time to complete.
 - To launch the main script simply run:
     ```bash
     ./scripts/launch_all_10_times.sh
@@ -89,7 +89,7 @@ qsub -N "manual_submit" \
 - **Input:** The C++ program accepts the path to a matrix in `.mtx` format. The parallel version also accepts a scheduler name (`static`, `dynamic`, or `guided`) as the second argument.
 
 - **Output:** You will end up with two different files `.out` and `.err`
-    - The `.out` file will contain the CPU time and the elapsed time of the process in ms
+    - The `.out` file will contain the Elapsed Time for the 10 different runs
     - The `.err` file will contain the `perf stat` analysis 
 
 ### 5.1 Running Locally

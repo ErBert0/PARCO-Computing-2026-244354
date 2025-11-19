@@ -230,7 +230,7 @@ int main(int argc, char* argv[]){
     for (int i = 0; i< timings.size(); i++){
         cout << timings[i];
         if (i==timings.size()-1){
-            cout << "";
+            cout << ""<<endl;
         }else{
             cout << ";";
         }

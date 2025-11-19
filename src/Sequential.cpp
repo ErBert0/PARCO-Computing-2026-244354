@@ -189,14 +189,13 @@ int main(int argc, char* argv[]){
         timings.push_back(elapsed);
     
     }
-    
 
     cout << "TIMES IN MS:";
     
     for (int i = 0; i< timings.size(); i++){
         cout << timings[i];
         if (i==timings.size()-1){
-            cout << "";
+            cout << ""<<endl;
         }else{
             cout << ";";
         }
