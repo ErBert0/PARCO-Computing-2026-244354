@@ -210,6 +210,10 @@ int main(int argc, char* argv[]){
     vector<double> x = generate_vector(n_col); 
     vector<double> timings;
 
+    //CACHE WARMUP
+    vector<double> y = spmv_parallel(x, n_row, values, columns, row_ptr, scheduler);
+
+
      //2. Inizio Testing
     for (int i = 0; i< NUM_RUN; i++){
         struct timespec t0m, t1m;
