@@ -5,12 +5,13 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
 #2.This is the absolute path for the PBS template
 PBS_TEMPLATE="$ROOT/scripts/job_template.pbs"
+RESULTS_DIR="$REPO_ROOT/results"
 
 
 # --- MAIN VARIABLES TO CHANGE---
 WALLTIME="03:00:00"
 MEMORY=20gb
-MAX_JOBS=29
+MAX_JOBS=30
 #------------------------------------------------------------------------
 
 
@@ -28,7 +29,6 @@ THREADS=(4 8 16 32 64) # List of threads to test
 SCHEDULERS=("static" "dynamic" "guided") #Schedulers
 
 
-RESULTS_DIR="i_miei_risultati" # Directory for all the .out/.err files for a single run
 mkdir -p $RESULTS_DIR
 
 
@@ -45,8 +45,8 @@ check_queue_limit() {
 
 # --- SEQUENTIAL SECTION ---
 echo "Sending Sequential Jobs"
-for M_PATH in "${MATRICI[@]}"; do
-    M_NAME=$(basename "$M_PATH" .mtx)
+for M in "${MATRICI[@]}"; do
+    M_NAME=$(basename "$M" .mtx)
     
     # Name file format: "matrix_scheduler_threads"
     JOB_NAME="${M_NAME}_sequential_1"
@@ -62,15 +62,15 @@ for M_PATH in "${MATRICI[@]}"; do
          -e "$ERR_FILE" \
          -l select=1:ncpus=1:mem=$MEMORY \
          -l walltime=$WALLTIME \
-         -v ROOT="$ROOT",MATRICE="$M_PATH",SCHEDULER="sequential",NCPUS=1 \
+         -v ROOT="$ROOT",MATRICE="$M",SCHEDULER="sequential",NCPUS=1 \
          "$PBS_TEMPLATE"
     sleep 1
 done
 
 # --- 2. PARALLEL SECTION---
 echo "Sending Parallel Jobs"
-for M_PATH in "${MATRICI[@]}"; do
-    M_NAME=$(basename "$M_PATH" .mtx)
+for M in "${MATRICI[@]}"; do
+    M_NAME=$(basename "$M" .mtx)
     for S in "${SCHEDULERS[@]}"; do
         for T in "${THREADS[@]}"; do
             
@@ -88,7 +88,7 @@ for M_PATH in "${MATRICI[@]}"; do
                  -e "$ERR_FILE" \
                  -l select=1:ncpus=$T:mem=$MEMORY \
                  -l walltime=$WALLTIME \
-                 -v ROOT="$ROOT",MATRICE="$M_PATH",SCHEDULER="$S",NCPUS=$T \
+                 -v ROOT="$ROOT",MATRICE="$M",SCHEDULER="$S",NCPUS=$T \
                  "$PBS_TEMPLATE"
 	    sleep 1
         done

@@ -10,6 +10,7 @@
 using namespace std;
 
 #define MAXSIZE 20
+#define NUM_RUN 10
 
 class element{
 
@@ -172,22 +173,34 @@ int main(int argc, char* argv[]){
 
     //1. Genera Vettore Random
     vector<double> x = generate_vector(n_col); 
+    vector<double> timings;
 
      //2. Inizio Testing
-    struct timespec t0m, t1m;
-
-    clock_t t0 = clock();
-    clock_gettime(CLOCK_MONOTONIC, &t0m);
-    vector<double> y_seq = spmv_seq(x, n_row, values, columns, row_ptr);
-    clock_t t1 = clock();
-    clock_gettime(CLOCK_MONOTONIC, &t1m);
-
-    double elapsed = (t1m.tv_sec - t0m.tv_sec)*1000.0 +
+    for (int i = 0; i< NUM_RUN; i++){
+        struct timespec t0m, t1m;
+        
+        clock_gettime(CLOCK_MONOTONIC, &t0m);
+        vector<double> y_seq = spmv_seq(x, n_row, values, columns, row_ptr);
+        clock_gettime(CLOCK_MONOTONIC, &t1m);
+    
+        
+        double elapsed = (t1m.tv_sec - t0m.tv_sec)*1000.0 +
                      (t1m.tv_nsec - t0m.tv_nsec) / 1e6;
+        timings.push_back(elapsed);
+    
+    }
+    
 
-
-    cout << "CPU time:" << static_cast<double>(t1 - t0) / CLOCKS_PER_SEC << " s | ";
-    cout << "Elapsed time:" << elapsed << " ms\n";
+    cout << "TIMES IN MS:";
+    
+    for (int i = 0; i< timings.size(); i++){
+        cout << timings[i];
+        if (i==timings.size()-1){
+            cout << "";
+        }else{
+            cout << ";";
+        }
+    }
 
 
     return 0;
