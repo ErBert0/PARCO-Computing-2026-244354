@@ -5,7 +5,7 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
 #2.This is the absolute path for the PBS template
 PBS_TEMPLATE="$ROOT/scripts/job_template.pbs"
-RESULTS_DIR="$REPO_ROOT/results_timings"
+RESULTS_DIR="$ROOT/results_timings"
 
 
 # --- MAIN VARIABLES TO CHANGE---
