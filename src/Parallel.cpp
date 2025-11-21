@@ -66,7 +66,7 @@ void spmv_parallel(
     } else if (scheduler == "guided") {
         omp_set_schedule(omp_sched_guided,0);
     } else {
-        omp_set_schedule(omp_sched_static); 
+        omp_set_schedule(omp_sched_static,0); 
     }
 
     #pragma omp parallel for schedule(runtime)
