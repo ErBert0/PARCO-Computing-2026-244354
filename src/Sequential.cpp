@@ -57,7 +57,6 @@ void spmv_seq(
 {
     
     
-
     for (int i = 0; i < nrow; i++) {
 
         double local_sum = 0.0;

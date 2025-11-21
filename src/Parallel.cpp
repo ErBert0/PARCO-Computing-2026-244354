@@ -59,48 +59,29 @@ void spmv_parallel(
     vector<double>& result)
 {
 
-
-    if (scheduler == "static")
-    {
-        #pragma omp parallel for schedule(static)
-        for (int i = 0; i < nrow; i++) {
-
-            double local_sum = 0.0;
-
-            for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
-                local_sum += values[j] * vec[columns[j]];
-            }
-
-            result[i]= local_sum;
-        }
+    if (scheduler == "static"){
+        omp_set_schedule(omp_sched_static); 
+    } else if (scheduler == "dynamic") {
+        omp_set_schedule(omp_sched_dynamic); 
+    } else if (scheduler == "guided") {
+        omp_set_schedule(omp_sched_guided);
+    } else {
+        omp_set_schedule(omp_sched_static); 
     }
-    else if (scheduler == "dynamic")
-    {
-        #pragma omp parallel for schedule(dynamic)
-        for (int i = 0; i < nrow; i++) {
 
-            double local_sum = 0.0;
+    #pragma omp parallel for schedule(runtime)
+    for (int i = 0; i < nrow; i++) {
 
-            for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
-                local_sum += values[j] * vec[columns[j]];
-            }
+        double local_sum = 0.0;
 
-            result[i]= local_sum;
+        int start = row_ptr[i];
+        int end = row_ptr[i+1];
+
+        for (int j=start; j<end;j++ ){
+            local_sum += values[j] * vec[columns[j]];
         }
-    }
-    else if (scheduler == "guided")
-    {
-        #pragma omp parallel for schedule(guided)
-        for (int i = 0; i < nrow; i++) {
 
-            double local_sum = 0.0;
-
-            for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
-                local_sum += values[j] * vec[columns[j]];
-            }
-
-            result[i]= local_sum;
-        }
+        result[i]= local_sum;
     }
      
 }
