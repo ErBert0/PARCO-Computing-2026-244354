@@ -69,15 +69,10 @@ void spmv_parallel(
         omp_set_schedule(omp_sched_static,0); 
     }
 
-    printf("DEBUG: Il programma vede %d thread massimi disponibili.\n", omp_get_max_threads());
 
     #pragma omp parallel for schedule(runtime)
     for (int i = 0; i < nrow; i++) {
 
-        if (omp_get_thread_num() == 0) {
-        printf("DEBUG: Sto eseguendo la regione parallela con %d thread reali.\n", omp_get_num_threads());
-        }
-        
         double local_sum = 0.0;
 
         int start = row_ptr[i];
