@@ -60,11 +60,11 @@ void spmv_parallel(
 {
 
     if (scheduler == "static"){
-        omp_set_schedule(omp_sched_static); 
+        omp_set_schedule(omp_sched_static,0); 
     } else if (scheduler == "dynamic") {
-        omp_set_schedule(omp_sched_dynamic); 
+        omp_set_schedule(omp_sched_dynamic,0); 
     } else if (scheduler == "guided") {
-        omp_set_schedule(omp_sched_guided);
+        omp_set_schedule(omp_sched_guided,0);
     } else {
         omp_set_schedule(omp_sched_static); 
     }
