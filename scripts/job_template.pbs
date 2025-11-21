@@ -23,7 +23,7 @@ if [ ! -f "$EXECUTABLE_PATH" ]; then
     exit 1
 fi
 
-
+lscpu
 PERF_FLAGS="L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses"
 
 if [ "$SCHEDULER" == "sequential" ]; then
