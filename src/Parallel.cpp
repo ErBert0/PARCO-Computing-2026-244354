@@ -206,13 +206,12 @@ int main(int argc, char* argv[]){
     }
 
 
-    //1. Genera Vettore Random
+    //1. Genera i Vector
     vector<double> x = generate_vector(n_col); 
+    vector<double> y(n_row,0.0);
     vector<double> timings;
 
     //CACHE WARMUP
-    vector<double> y(n_row,0.0);
-    
     spmv_parallel(x, n_row, values, columns, row_ptr, scheduler,y);
 
      //2. Inizio Testing
@@ -230,16 +229,10 @@ int main(int argc, char* argv[]){
     }
     
 
-    cout << "TIMES IN MS:";
-    
-    for (int i = 0; i< timings.size(); i++){
-        cout << timings[i];
-        if (i==timings.size()-1){
-            cout << ""<<endl;
-        }else{
-            cout << ";";
-        }
-    }
+    sort(timings.begin(),timings.end());
+    double p90_time = timings[44];
+
+    cout << "P90_TIME_MS:" << p90_time << endl;
 
     return 0;
 }
