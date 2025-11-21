@@ -64,7 +64,7 @@ vector<double> generate_vector(int size){
     return vector;
 }
 
-vector<double> spmv_parallel(
+void spmv_parallel(
     const vector<double>& vec,
     int nrow,
     const vector<double>& values,
@@ -117,9 +117,7 @@ vector<double> spmv_parallel(
             result[i]= local_sum;
         }
     }
-
-    return result;
-        
+     
 }
 
 

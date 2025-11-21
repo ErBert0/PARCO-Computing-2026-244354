@@ -62,7 +62,7 @@ vector<double> generate_vector(int size){
     return vector;
 }
 
-vector<double> spmv_seq(
+void spmv_seq(
     const vector<double>& vec,
     int nrow,
     const vector<double>& values,
@@ -85,7 +85,6 @@ vector<double> spmv_seq(
 
     }
 
-    return result;
         
 }
 
