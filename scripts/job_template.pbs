@@ -8,6 +8,7 @@
 module load gcc91
 module load perf
 export OMP_NUM_THREADS=$NCPUS
+export OMP_PROC_BIND=close
 
 cd "$PBS_O_WORKDIR"
 

@@ -13,6 +13,3 @@ $COMPILER -O3 -march=native -o "$ROOT/Sequential.out" "$ROOT/src/Sequential.cpp"
 $COMPILER -O3 -march=native -fopenmp -o "$ROOT/Parallel.out" "$ROOT/src/Parallel.cpp"
 
 echo "Compilation Terminated."
-
-
-
