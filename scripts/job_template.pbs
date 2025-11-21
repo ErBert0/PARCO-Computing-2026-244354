@@ -8,7 +8,6 @@
 module load gcc91
 module load perf
 export OMP_NUM_THREADS=$NCPUS
-export OMP_PROC_BIND=close
 
 cd "$PBS_O_WORKDIR"
 
@@ -24,7 +23,6 @@ if [ ! -f "$EXECUTABLE_PATH" ]; then
     exit 1
 fi
 
-lscpu
 PERF_FLAGS="L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses"
 
 if [ "$SCHEDULER" == "sequential" ]; then
