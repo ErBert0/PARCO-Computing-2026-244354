@@ -36,32 +36,17 @@ public:
         }
         return column_numb < x.column_numb;
     }
-
-private:
-
-    void set_value(int num){
-        this->value = num;
-    }
-
-    void set_row(int num){
-        this->row_numb = num;
-    }
-
-    void set_column(int num){
-        this->column_numb = num;
-    }
-
 };
 
 
 vector<double> generate_vector(int size){
-    vector<double> vector(size);
+    vector<double> v(size);
     
     for (int i = 0; i < size; i++)
     {
-        vector[i] = (double)rand() / MAXSIZE;
+        v[i] = (double)rand() / MAXSIZE;
     }
-    return vector;
+    return v;
 }
 
 void spmv_parallel(
@@ -159,6 +144,7 @@ int main(int argc, char* argv[]){
 
     //Creazione matrice
     vector<element> matrice;
+    matrice.reserve(n_nonnull);
     
     while (getline(matrixfile, row))
     {
@@ -180,6 +166,9 @@ int main(int argc, char* argv[]){
     vector<int> columns;
     vector<int> row_ptr(n_row+1);
 
+    values.reserve(n_nonnull);
+    columns.reserve(n_nonnull);
+
     row_ptr[0] = 0;
     int current_row = 0;
 
@@ -199,7 +188,7 @@ int main(int argc, char* argv[]){
 
     while (current_row < n_row)
     {
-        row_ptr[current_row+1] = n_nonnull;
+        row_ptr[current_row+1] = values.size();
         current_row++;
     }
 
@@ -208,13 +197,15 @@ int main(int argc, char* argv[]){
     vector<double> x = generate_vector(n_col); 
     vector<double> y(n_row,0.0);
     vector<double> timings;
+    timings.reserve(NUM_RUN);
 
     //CACHE WARMUP
     spmv_parallel(x, n_row, values, columns, row_ptr, scheduler,y);
 
+    struct timespec t0m, t1m;
+
      //2. Inizio Testing
     for (int i = 0; i< NUM_RUN; i++){
-        struct timespec t0m, t1m;
         
         clock_gettime(CLOCK_MONOTONIC, &t0m);
         spmv_parallel(x, n_row, values, columns, row_ptr, scheduler,y);
@@ -228,7 +219,7 @@ int main(int argc, char* argv[]){
     
 
     sort(timings.begin(),timings.end());
-    double p90_time = timings[44];
+    double p90_time = timings[(int)(NUM_RUN * 0.9) - 1];
 
     cout << "P90_TIME_MS:" << p90_time << endl;
 
