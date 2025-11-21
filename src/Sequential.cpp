@@ -10,7 +10,7 @@
 using namespace std;
 
 #define MAXSIZE 20
-#define NUM_RUN 10
+#define NUM_RUN 50
 
 class element{
 
@@ -67,14 +67,15 @@ vector<double> spmv_seq(
     int nrow,
     const vector<double>& values,
     const vector<int>& columns,
-    const vector<int>& row_ptr)
+    const vector<int>& row_ptr,
+    vector<double>& result)
 {
     
-    vector<double> result(nrow);
+    
 
     for (int i = 0; i < nrow; i++) {
 
-        double local_sum = 0;
+        double local_sum = 0.0;
 
         for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
             local_sum += values[j] * vec[columns[j]];
@@ -176,14 +177,15 @@ int main(int argc, char* argv[]){
     vector<double> timings;
 
     //CACHE WARMUP
-    vector<double> y = spmv_seq(x, n_row, values, columns, row_ptr);
+    vector<double> y(n_row,0.0);
+    spmv_seq(x, n_row, values, columns, row_ptr,y);
 
      //2. Inizio Testing
     for (int i = 0; i< NUM_RUN; i++){
         struct timespec t0m, t1m;
         
         clock_gettime(CLOCK_MONOTONIC, &t0m);
-        vector<double> y_seq = spmv_seq(x, n_row, values, columns, row_ptr);
+        spmv_seq(x, n_row, values, columns, row_ptr,y);
         clock_gettime(CLOCK_MONOTONIC, &t1m);
     
         

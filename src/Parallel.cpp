@@ -11,7 +11,8 @@
 using namespace std;
 
 #define MAXSIZE 20
-#define NUM_RUN 10
+#define NUM_RUN 50
+
 
 class element{
 
@@ -69,10 +70,9 @@ vector<double> spmv_parallel(
     const vector<double>& values,
     const vector<int>& columns,
     const vector<int>& row_ptr,
-    string scheduler)
+    string scheduler,
+    vector<double>& result)
 {
-    
-    vector<double> result(nrow);
 
 
     if (scheduler == "static")
@@ -80,13 +80,13 @@ vector<double> spmv_parallel(
         #pragma omp parallel for schedule(static)
         for (int i = 0; i < nrow; i++) {
 
-        double local_sum = 0;
+            double local_sum = 0.0;
 
-        for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
-            local_sum += values[j] * vec[columns[j]];
-        }
+            for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
+                local_sum += values[j] * vec[columns[j]];
+            }
 
-        result[i]= local_sum;
+            result[i]= local_sum;
         }
     }
     else if (scheduler == "dynamic")
@@ -94,13 +94,13 @@ vector<double> spmv_parallel(
         #pragma omp parallel for schedule(dynamic)
         for (int i = 0; i < nrow; i++) {
 
-        double local_sum = 0;
+            double local_sum = 0.0;
 
-        for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
-            local_sum += values[j] * vec[columns[j]];
-        }
+            for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
+                local_sum += values[j] * vec[columns[j]];
+            }
 
-        result[i]= local_sum;
+            result[i]= local_sum;
         }
     }
     else if (scheduler == "guided")
@@ -108,13 +108,13 @@ vector<double> spmv_parallel(
         #pragma omp parallel for schedule(guided)
         for (int i = 0; i < nrow; i++) {
 
-        double local_sum = 0;
+            double local_sum = 0.0;
 
-        for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
-            local_sum += values[j] * vec[columns[j]];
-        }
+            for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
+                local_sum += values[j] * vec[columns[j]];
+            }
 
-        result[i]= local_sum;
+            result[i]= local_sum;
         }
     }
 
@@ -211,15 +211,16 @@ int main(int argc, char* argv[]){
     vector<double> timings;
 
     //CACHE WARMUP
-    vector<double> y = spmv_parallel(x, n_row, values, columns, row_ptr, scheduler);
-
+    vector<double> y(n_row,0.0);
+    
+    spmv_parallel(x, n_row, values, columns, row_ptr, scheduler,y);
 
      //2. Inizio Testing
     for (int i = 0; i< NUM_RUN; i++){
         struct timespec t0m, t1m;
         
         clock_gettime(CLOCK_MONOTONIC, &t0m);
-        vector<double> y_par = spmv_parallel(x, n_row, values, columns, row_ptr, scheduler);
+        spmv_parallel(x, n_row, values, columns, row_ptr, scheduler,y);
         clock_gettime(CLOCK_MONOTONIC, &t1m);
     
         
