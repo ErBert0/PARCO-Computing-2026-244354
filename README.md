@@ -1,7 +1,6 @@
 # Introduction to Parallel Computing - Project Repository
 
 **Student:** Matteo Bertè (Matricola: 244354)
-**Course:** a.y. 2025/2026
 
 This repository contains the source code, scripts, and reports for the "Introduction to Parallel Computing" course projects.
 

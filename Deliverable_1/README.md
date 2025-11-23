@@ -47,7 +47,7 @@ All benchmarks were conducted on the university cluster, using:
 ### Step 0: Clone the Repository
 ```bash
 git clone https://github.com/ErBert0/PARCO-Computing-2026-244354.git
-cd PARCO-Computing-2026-244354
+cd PARCO-Computing-2026-244354/Deliverable_1
 ```
 
 ### Step 1: Compilation
