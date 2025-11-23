@@ -106,7 +106,6 @@ int main(int argc, char* argv[]){
     int n_row, n_col, n_nonnull;
 
 
-    //APERTURA E LETTURA FILE
     ifstream matrixfile(matrix_name);
 
     if(!matrixfile.is_open()){
@@ -124,7 +123,7 @@ int main(int argc, char* argv[]){
         break;
     }
 
-    //Creazione matrice
+    //Matrix Creation
     vector<element> matrice;
     matrice.reserve(n_nonnull);
     
@@ -139,11 +138,11 @@ int main(int argc, char* argv[]){
         matrice.push_back(e);
     }
 
-    //Ordinamento Matrice
+    //Sorting
     sort(matrice.begin(), matrice.end());
 
 
-    //Conversione in CSR
+    //CSR Conversion
     vector<double> values;
     vector<int> columns;
     vector<int> row_ptr(n_row+1);
@@ -175,7 +174,7 @@ int main(int argc, char* argv[]){
     }
 
 
-    //1. Genera i Vector
+    //1. Create Vectors
     vector<double> x = generate_vector(n_col); 
     vector<double> y(n_row,0.0);
     vector<double> timings;
@@ -186,7 +185,7 @@ int main(int argc, char* argv[]){
 
     struct timespec t0m, t1m;
 
-     //2. Inizio Testing
+     //2. Start Testing
     for (int i = 0; i< NUM_RUN; i++){
         
         clock_gettime(CLOCK_MONOTONIC, &t0m);

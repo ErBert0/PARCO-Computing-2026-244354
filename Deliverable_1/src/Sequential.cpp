@@ -127,7 +127,7 @@ int main(int argc, char* argv[]){
     //Sorting
     sort(matrice.begin(), matrice.end());
 
-    //Conversione in CSR
+    //CSR Conversion
     vector<double> values;
     vector<int> columns;
     vector<int> row_ptr(n_row+1);
@@ -159,7 +159,7 @@ int main(int argc, char* argv[]){
     }
 
 
-    //1. Genera i Vettori
+    //1. Create Vectors
     vector<double> x = generate_vector(n_col); 
     vector<double> y(n_row,0.0);
     vector<double> timings;
@@ -170,7 +170,7 @@ int main(int argc, char* argv[]){
 
     struct timespec t0m, t1m;
 
-     //2. Inizio Testing
+     //2. Start Testing
     for (int i = 0; i< NUM_RUN; i++){
         
         clock_gettime(CLOCK_MONOTONIC, &t0m);
