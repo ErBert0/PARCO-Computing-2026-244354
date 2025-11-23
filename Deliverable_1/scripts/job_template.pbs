@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# QUEUE
+#PBS -q short_cpuQ
+
+
+# --- Setup Ambiente ---
+module load gcc91
+module load perf
+export OMP_NUM_THREADS=$NCPUS
+
+cd "$PBS_O_WORKDIR"
+
+
+if [ "$SCHEDULER" == "sequential" ]; then
+    EXECUTABLE_PATH="$ROOT/Sequential.out"
+else
+    EXECUTABLE_PATH="$ROOT/Parallel.out"
+fi
+
+if [ ! -f "$EXECUTABLE_PATH" ]; then
+    echo "ERROR: Executable NOT FOUND!"
+    exit 1
+fi
+
+PERF_FLAGS="L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses"
+
+if [ "$SCHEDULER" == "sequential" ]; then
+    perf stat -e $PERF_FLAGS "$EXECUTABLE_PATH" "$MATRICE"
+else
+    perf stat -e $PERF_FLAGS "$EXECUTABLE_PATH" "$MATRICE" "$SCHEDULER"
+fi
