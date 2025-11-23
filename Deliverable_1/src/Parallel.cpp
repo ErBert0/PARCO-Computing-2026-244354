@@ -182,7 +182,7 @@ int main(int argc, char* argv[]){
     timings.reserve(NUM_RUN);
 
     //CACHE WARMUP
-    spmv_parallel(x, n_row, values, columns, row_ptr, scheduler,y);
+    spmv_parallel(x, n_row, values, columns, row_ptr, y);
 
     struct timespec t0m, t1m;
 
