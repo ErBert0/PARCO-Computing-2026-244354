@@ -23,7 +23,7 @@ MATRICI=(
     "$MATRICI_DIR/2_kkt.mtx"
     "$MATRICI_DIR/3_mawi.mtx"
     "$MATRICI_DIR/4_nlpkk.mtx"
-    "$MATRICI_DIR/5_web-Google.mtx"
+    "$MATRICI_DIR/5_ecology2.mtx"
 )
 THREADS=(4 8 16 32 64) # List of threads to test
 SCHEDULERS=("static" "dynamic" "guided") #Schedulers
