@@ -109,12 +109,13 @@ for M in "${MATRICES_LIST[@]}"; do
             if [ -z "$DATA_LINE" ]; then
                 echo "ERROR: Failed to fetch the output."
             else
-
             RAW_VALUES=$(echo "$DATA_LINE" | sed 's/\[CSV_DATA\] //')
 
             METRICS=$(echo "$RAW_VALUES" | cut -d ',' -f4-)
-        
+
             echo "$BENCHMARK_MODE,$MATRIX_NAME,$P,$r,$METRICS" >> "$CSV_OUTPUT"
+            
+            fi
 
         done
     done 

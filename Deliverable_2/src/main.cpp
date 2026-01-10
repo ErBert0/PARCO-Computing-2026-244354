@@ -351,7 +351,7 @@ int main(int argc, char* argv[]){
         printf("  - Comm Time : %e s (%.2f%%)\n", avg_comm, (avg_comm/avg_total)*100);
         printf("  - Comp Time : %e s (%.2f%%)\n", avg_comp, (avg_comp/avg_total)*100);
 
-        printf("[CSV_DATA] %s,%d,%d,%e,%e,%e,%.4f,%.2f,%.2f\n", 
+        printf("[CSV_DATA] %s,%d,%d,%e,%e,%e,%.4f\n", 
                weak ? "WEAK" : "STRONG", 
                M_global,
                size, 
