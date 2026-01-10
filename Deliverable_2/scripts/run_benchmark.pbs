@@ -1,0 +1,123 @@
+#!/bin/bash
+#PBS -N spmv_benchmark
+#PBS -o spmv_output.log
+#PBS -e spmv_error.log
+#PBS -q short_cpuQ
+#PBS -l walltime=06:00:00
+#PBS -l select=4:ncpus=32:mpiprocs=32:mem=64gb
+
+
+#--- Configuration Section ---
+
+
+cd "$PBS_O_WORKDIR" || exit 1
+
+SRC_DIR="src"
+RESULTS_DIR="results"
+MAT_DIR="matrices"
+
+mkdir -p "$RESULTS_DIR"
+
+# Select Mode: "strong" OR "weak"
+BENCHMARK_MODE="weak"
+
+# List of MPI Processes to test 
+PROCS_TO_TEST="1 2 4 8 16 32 64 128"
+
+# Number of repetitions for each test 
+RUNS=10
+
+# WEAK SCALING SETTINGS (Only used if mode is "weak")
+WEAK_ROWS=10000
+WEAK_NNZ=50
+
+# STRONG SCALING SETTINGS (List of matrix files, only used if mode is "strong")
+#Make sure to modify this list in case you decide to use different matrices
+MATRICES=(
+    "$MAT_DIR/1_ASIC.mtx"
+    "$MAT_DIR/2_kkt.mtx"
+    "$MAT_DIR/3_mawi.mtx"
+    "$MAT_DIR/4_nlpkk.mtx"
+    "$MAT_DIR/5_ecology2.mtx"
+)
+
+# Output CSV filename
+TIME=$(date +%Y%m%d_%H%M%S)
+CSV_OUTPUT="$RESULTS_DIR/results_benchmark_${BENCHMARK_MODE}_${TIME}.csv"
+
+#--- Setup and Compilation ---
+
+set -u
+module purge
+module load gcc91
+module load mpich-3.2.1--gcc-9.1.0
+
+echo "Compiling..."
+
+mpic++ -O3 -march=native -o spmv_executable "$SRC_DIR/main.cpp" "$SRC_DIR/mmio.c"
+
+if [ $? -ne 0 ]; then
+    echo "!!! [Error] Compilation Failed."
+    exit 1
+fi
+
+echo "---Compilation Successful!---"
+
+#--- Output File Preparation ---
+
+echo "mode,matrix,procs,run_id,total_time,comm_time,comp_time,gflops" > "$CSV_OUTPUT"
+
+echo "--- Benchmark started. Mode: $BENCHMARK_MODE"
+echo "--- Results will be saved to: $CSV_OUTPUT"
+
+
+if [ "$BENCHMARK_MODE" == "strong" ]; then
+    MATRICES_LIST=("${MATRICES[@]}")
+else
+    MATRICES_LIST=("WEAK_SCALING_GENERATED")
+fi
+
+
+for M in "${MATRICES_LIST[@]}"; do
+
+    #Skip if the Matrix File doesn't exists
+    if [ "$BENCHMARK_MODE" == "strong" ] && [ ! -f "$M" ]; then
+        echo "Warning: Matrix file $M not found. Skipping."
+        continue
+    fi
+
+    for P in $PROCS_TO_TEST; do
+        
+        for (( r=1; r<=RUNS; r++ )); do
+            
+            echo " -> Running: $BENCHMARK_MODE | Procs: $P | Run: $r | Item: $(basename "$M")"
+
+            if [ "$BENCHMARK_MODE" == "strong" ]; then
+                CMD="mpiexec -np $P ./spmv_executable $M"
+                MATRIX_NAME=$(basename "$M")
+            else
+                CMD="mpiexec -np $P ./spmv_executable --weak $WEAK_ROWS $WEAK_NNZ"
+                MATRIX_NAME="Generated_${WEAK_ROWS}x${WEAK_NNZ}"
+            fi
+
+
+            #Execution and Data Extraction
+            OUTPUT=$($CMD 2>&1)
+
+            DATA_LINE=$(echo "$OUTPUT" | grep "\[CSV_DATA\]" | tail -n 1)
+
+            if [ -z "$DATA_LINE" ]; then
+                echo "ERROR: Failed to fetch the output."
+            else
+
+            RAW_VALUES=$(echo "$DATA_LINE" | sed 's/\[CSV_DATA\] //')
+
+            METRICS=$(echo "$RAW_VALUES" | cut -d ',' -f4-)
+        
+            echo "$BENCHMARK_MODE,$MATRIX_NAME,$P,$r,$METRICS" >> "$CSV_OUTPUT"
+
+        done
+    done 
+done 
+
+echo "--- Benchmark Finished ---"
