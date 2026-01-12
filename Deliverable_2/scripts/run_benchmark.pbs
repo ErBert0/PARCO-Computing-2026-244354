@@ -54,7 +54,7 @@ module load mpich-3.2.1--gcc-9.1.0
 
 echo "Compiling..."
 
-mpic++ -O3 -march=native -o spmv_executable "$SRC_DIR/main.cpp" "$SRC_DIR/mmio.c"
+mpicc -O3 -march=native -o spmv_executable.o "$SRC_DIR/main.c" "$SRC_DIR/mmio.c" 
 
 if [ $? -ne 0 ]; then
     echo "!!! [Error] Compilation Failed."
@@ -93,10 +93,10 @@ for M in "${MATRICES_LIST[@]}"; do
             echo " -> Running: $BENCHMARK_MODE | Procs: $P | Run: $r | Item: $(basename "$M")"
 
             if [ "$BENCHMARK_MODE" == "strong" ]; then
-                CMD="mpiexec -np $P ./spmv_executable $M"
+                CMD="mpirun -np $P ./spmv_executable $M"
                 MATRIX_NAME=$(basename "$M")
             else
-                CMD="mpiexec -np $P ./spmv_executable --weak $WEAK_ROWS $WEAK_NNZ"
+                CMD="mpirun -np $P ./spmv_executable --weak $WEAK_ROWS $WEAK_NNZ"
                 MATRIX_NAME="Generated_${WEAK_ROWS}x${WEAK_NNZ}"
             fi
 
