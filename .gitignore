@@ -1,6 +1,7 @@
 *.o
 *.out
 spmv
+main.c
 
 Deliverable_2/matrices/*
 !Deliverable_2/matrices/.gitkeep

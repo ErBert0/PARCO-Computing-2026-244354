@@ -99,14 +99,15 @@ vector<element> generateWeakMatrix(int rows_per_proc, int nnz_per_row, int size,
     vector<element> matrix;
     matrix.reserve(nz);
 
-    // Generazione deterministica basata su seed fisso per riproducibilità
+    // Fixed Seed for reproducibility
     srand(12); 
 
     for (int i = 0; i < M; i++) {
-        // Elemento diagonale (per evitare righe vuote e garantire stabilità)
+        
+        //Diagonal Element
         matrix.emplace_back(i, i, 10.0);
         
-        // Altri elementi random nella riga
+        
         for (int k = 1; k < nnz_per_row; k++) {
             int col = rand() % N;
             matrix.emplace_back(i, col, ((double)rand() / RAND_MAX));
@@ -128,7 +129,8 @@ void spmv_seq(
 
         double local_sum = 0.0;
 
-        for (int j=row_ptr[i]; j<row_ptr[i+1];j++ ){
+        for (int j=row_ptr[i]; j<row_ptr[i+1];j++ )
+        {
             local_sum += values[j] * vec_x[columns[j]];
         }
 
