@@ -92,10 +92,10 @@ for M in "${MATRICES_LIST[@]}"; do
             echo " -> Running: $BENCHMARK_MODE | Procs: $P | Run: $r | Item: $(basename "$M")"
 
             if [ "$BENCHMARK_MODE" == "strong" ]; then
-                CMD="mpirun -np $P ./spmv_executable $M"
+                CMD="mpirun -np $P ./spmv_executable.o $M"
                 MATRIX_NAME=$(basename "$M")
             else
-                CMD="mpirun -np $P ./spmv_executable --weak $WEAK_ROWS $WEAK_NNZ"
+                CMD="mpirun -np $P ./spmv_executable.o --weak $WEAK_ROWS $WEAK_NNZ"
                 MATRIX_NAME="Generated_${WEAK_ROWS}x${WEAK_NNZ}"
             fi
 
