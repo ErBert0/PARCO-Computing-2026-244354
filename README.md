@@ -10,5 +10,4 @@ The repository is organized into two main folders, one for each deliverable:
 
 - **[Deliverable_1](./Deliverable_1)**: **SpMV Optimization using OpenMP**
 
-- **[Deliverable_2](./Deliverable_2)**: *(Work in Progress)*
-  
+- **[Deliverable_2](./Deliverable_2)**: **SpMV Optimization using MPI**
