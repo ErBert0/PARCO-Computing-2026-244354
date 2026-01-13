@@ -113,4 +113,3 @@ mpirun -np 4 ./spmv_executable.o --weak 10000 50
     - `CSV file`: The PBS script parses the output and saves a structured CSV in `results/`.
 
 The CSV format is: `mode, matrix, procs, run_id, total_time, comm_time, comp_time, gflops`
-

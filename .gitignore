@@ -5,11 +5,3 @@ main.c
 
 Deliverable_2/matrices/*
 !Deliverable_2/matrices/.gitkeep
-
-Deliverable_2/results/*
-!Deliverable_2/results/.gitkeep
-
-Deliverable_2/img_plots/*
-
-Deliverable_2/venv_plots/*
-Deliverable_2/plot_benchmark.py

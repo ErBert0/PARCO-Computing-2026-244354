@@ -71,7 +71,7 @@ vector<element> readMatrix(const char* filename, int& M, int& N, int& nz){
         exit(1);
     }
 
-    /* reseve memory for matrices */
+    /* reserve memory for matrices */
 
     vector<element> matrix;
     matrix.reserve(nz);
@@ -254,8 +254,8 @@ int main(int argc, char* argv[]){
                 my_vals.data(), my_nz_count, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
 
-    //----CSR CONVERTION----
-    
+    //----CSR CONVERSION----
+
     int my_rows_count = M_global / size;
     if (rank < M_global % size) {
         my_rows_count++;
@@ -317,6 +317,7 @@ int main(int argc, char* argv[]){
     double t_total_start = MPI_Wtime();
 
     for (int i = 0; i < ITERATIONS; i++) {
+        MPI_Barrier(MPI_COMM_WORLD);
         // 1. Comunication
         t_start = MPI_Wtime();
         MPI_Allgatherv(my_x.data(), x_local_size, MPI_DOUBLE, 
